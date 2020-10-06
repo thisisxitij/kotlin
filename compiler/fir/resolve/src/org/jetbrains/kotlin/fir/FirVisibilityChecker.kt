@@ -67,8 +67,6 @@ abstract class FirVisibilityChecker : FirSessionComponent {
                     } else {
                         // Member: visible inside parent class, including all its member classes
                         canSeePrivateMemberOf(containingDeclarations, ownerId, session)
-                                // Handle enum entries, as they are represented as anonymous objects (KT-42351)
-                                || containingDeclarations.any { it is FirAnonymousObject && it.declarations.contains(declaration) }
                     }
                 } else {
                     declaration is FirSimpleFunction && declaration.isAllowedToBeAccessedFromOutside()

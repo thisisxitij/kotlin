@@ -624,7 +624,10 @@ class DeclarationsConverter(
                     origin = FirDeclarationOrigin.Source
                     classKind = ClassKind.ENUM_ENTRY
                     scopeProvider = baseScopeProvider
-                    symbol = FirAnonymousObjectSymbol()
+                    val currentClassId = this@DeclarationsConverter.context.currentClassId
+                    symbol = FirAnonymousObjectSymbol(
+                        ClassId(currentClassId.packageFqName, currentClassId.relativeClassName, true)
+                    )
                     annotations += modifiers.annotations
                     val enumClassWrapper = ClassWrapper(
                         enumEntryName, modifiers, ClassKind.ENUM_ENTRY, this,

@@ -25,7 +25,6 @@ import org.jetbrains.kotlin.fir.diagnostics.DiagnosticKind
 import org.jetbrains.kotlin.fir.expressions.*
 import org.jetbrains.kotlin.fir.expressions.builder.*
 import org.jetbrains.kotlin.fir.expressions.impl.FirSingleExpressionBlock
-import org.jetbrains.kotlin.fir.references.FirNamedReference
 import org.jetbrains.kotlin.fir.references.builder.*
 import org.jetbrains.kotlin.fir.scopes.FirScopeProvider
 import org.jetbrains.kotlin.fir.symbols.AbstractFirBasedSymbol
@@ -723,7 +722,10 @@ class RawFirBuilder(
                         origin = FirDeclarationOrigin.Source
                         classKind = ClassKind.ENUM_ENTRY
                         scopeProvider = this@RawFirBuilder.baseScopeProvider
-                        symbol = FirAnonymousObjectSymbol()
+                        val currentClassId = this@RawFirBuilder.context.currentClassId
+                        symbol = FirAnonymousObjectSymbol(
+                            ClassId(currentClassId.packageFqName, currentClassId.relativeClassName, true)
+                        )
 
                         extractAnnotationsTo(this)
                         val delegatedEntrySelfType = buildResolvedTypeRef {
