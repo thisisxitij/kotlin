@@ -7,8 +7,7 @@ package org.jetbrains.kotlinx.atomicfu.compiler.extensions
 
 import org.jetbrains.kotlin.backend.common.deepCopyWithVariables
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
-import org.jetbrains.kotlin.backend.common.extensions.IrPluginContextImpl
-import org.jetbrains.kotlin.descriptors.Visibilities
+import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
 import org.jetbrains.kotlin.ir.*
 import org.jetbrains.kotlin.ir.backend.js.ir.JsIrBuilder.buildValueParameter
 import org.jetbrains.kotlin.ir.builders.declarations.buildTypeParameter
@@ -405,7 +404,7 @@ class AtomicFUTransformer(override val context: IrPluginContext) : IrElementTran
             parent = parentDeclaration as IrDeclarationParent,
             origin = IrDeclarationOrigin.DEFAULT_PROPERTY_ACCESSOR,
             name = Name.identifier(name),
-            visibility = Visibilities.LOCAL,
+            visibility = DescriptorVisibilities.LOCAL,
             isInline = true,
             returnType = returnType
         ).apply {
@@ -555,7 +554,7 @@ class AtomicFUTransformer(override val context: IrPluginContext) : IrElementTran
     ) = try {
             context.referenceFunctions(FqName("$packageName.$name")).single(predicate)
         } catch (e: RuntimeException) {
-            error("Exception while looking for the function `$name` in package `$packageName`: ${e.message}, scope: ${buildString { for (N in (context as IrPluginContextImpl).scopeFunctions(FqName("$packageName.atomic"))!!) { append(N.identifier); append("\n") } }}")
+            error("Exception while looking for the function `$name` in package `$packageName`: ${e.message}")
         }
 
     private fun referenceFunction(classSymbol: IrClassSymbol, functionName: String): IrSimpleFunctionSymbol {
