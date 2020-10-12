@@ -1,0 +1,33 @@
+FILE: privateInImplicit.kt
+    public abstract interface I : R|kotlin/Any| {
+        public open val a: R|kotlin/Int| = Int(2)
+            public get(): R|kotlin/Int|
+
+    }
+    public open class B : R|kotlin/Any| {
+        public constructor(): R|B| {
+            super<R|kotlin/Any|>()
+        }
+
+        private final val a: R|kotlin/Int| = Int(3)
+            private get(): R|kotlin/Int|
+
+    }
+    public final class D : R|B|, R|I| {
+        public constructor(): R|D| {
+            super<R|B|>()
+        }
+
+        public final val x: R|kotlin/Int| = this@R|/D|.R|/I.a|
+            public get(): R|kotlin/Int|
+
+    }
+    public final class E : R|B| {
+        public constructor(): R|E| {
+            super<R|B|>()
+        }
+
+        public final val x: R|kotlin/Int| = this@R|/E|.<HIDDEN: /B.a is invisible>#
+            public get(): R|kotlin/Int|
+
+    }

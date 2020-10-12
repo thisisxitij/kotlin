@@ -2666,6 +2666,11 @@ public class FirDiagnosticsWithLightTreeTestGenerated extends AbstractFirDiagnos
             runTest("compiler/fir/analysis-tests/testData/resolve/visibility/kotlinJavaKotlinHierarchy.kt");
         }
 
+        @TestMetadata("privateInImplicit.kt")
+        public void testPrivateInImplicit() throws Exception {
+            runTest("compiler/fir/analysis-tests/testData/resolve/visibility/privateInImplicit.kt");
+        }
+
         @TestMetadata("protectedInCompanion.kt")
         public void testProtectedInCompanion() throws Exception {
             runTest("compiler/fir/analysis-tests/testData/resolve/visibility/protectedInCompanion.kt");
