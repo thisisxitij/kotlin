@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.fir.backend.generators
 
+import org.jetbrains.kotlin.descriptors.Visibility
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.FirSymbolOwner
 import org.jetbrains.kotlin.fir.backend.*
@@ -16,6 +17,7 @@ import org.jetbrains.kotlin.fir.scopes.getDirectOverriddenProperties
 import org.jetbrains.kotlin.fir.scopes.impl.FirClassSubstitutionScope
 import org.jetbrains.kotlin.fir.scopes.unsubstitutedScope
 import org.jetbrains.kotlin.fir.symbols.AbstractFirBasedSymbol
+import org.jetbrains.kotlin.fir.symbols.ConeClassLikeLookupTag
 import org.jetbrains.kotlin.fir.symbols.PossiblyFirFakeOverrideSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirCallableSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
@@ -134,7 +136,10 @@ class FakeOverrideGenerator(
         isLocal: Boolean,
         originalSymbol: FirCallableSymbol<*>,
         cachedIrDeclaration: (D) -> I?,
-        createIrDeclaration: (D, irParent: IrClass, thisReceiverOwner: IrClass?, origin: IrDeclarationOrigin, isLocal: Boolean) -> I,
+        createIrDeclaration: (
+            D, irParent: IrClass, thisReceiverOwner: IrClass?, origin: IrDeclarationOrigin,
+            isLocal: Boolean, containingClass: ConeClassLikeLookupTag?, visibility: Visibility
+        ) -> I,
         createFakeOverrideSymbol: (D, S) -> S,
         baseSymbols: MutableMap<I, List<S>>,
         result: MutableList<in I>,
@@ -161,7 +166,9 @@ class FakeOverrideGenerator(
                     originalDeclaration, irClass,
                     declarationStorage.findIrParent(baseSymbol.fir) as? IrClass,
                     origin,
-                    isLocal
+                    isLocal,
+                    null,
+                    originalDeclaration.visibility
                 )
             irDeclaration.parent = irClass
             baseSymbols[irDeclaration] = computeBaseSymbols(originalSymbol, baseSymbol, computeDirectOverridden, scope, classId)
@@ -177,7 +184,9 @@ class FakeOverrideGenerator(
                 fakeOverrideSymbol.fir, irClass,
                 declarationStorage.findIrParent(baseSymbol.fir) as? IrClass,
                 origin,
-                isLocal
+                isLocal,
+                null,
+                originalDeclaration.visibility
             )
             if (containsErrorTypes(irDeclaration)) {
                 return
