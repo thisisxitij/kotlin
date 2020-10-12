@@ -556,7 +556,7 @@ class Fir2IrDeclarationStorage(
             isGetter = !isSetter
         ) { symbol ->
             val accessorReturnType = if (isSetter) irBuiltIns.unitType else propertyType
-            val visibility = propertyAccessor?.visibility?.let {
+            val visibility = propertyAccessor?.visibility?.takeIf { it != Visibilities.Unknown }?.let {
                 components.visibilityConverter.convertToDescriptorVisibility(it)
             }
             irFactory.createFunction(
