@@ -168,7 +168,7 @@ class FakeOverrideGenerator(
                     origin,
                     isLocal,
                     null,
-                    originalDeclaration.visibility
+                    baseSymbol.fir.visibility
                 )
             irDeclaration.parent = irClass
             baseSymbols[irDeclaration] = computeBaseSymbols(originalSymbol, baseSymbol, computeDirectOverridden, scope, classId)
@@ -186,7 +186,7 @@ class FakeOverrideGenerator(
                 origin,
                 isLocal,
                 null,
-                originalDeclaration.visibility
+                baseSymbol.fir.visibility
             )
             if (containsErrorTypes(irDeclaration)) {
                 return
