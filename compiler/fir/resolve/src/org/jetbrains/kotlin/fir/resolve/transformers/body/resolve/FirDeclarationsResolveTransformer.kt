@@ -338,7 +338,9 @@ open class FirDeclarationsResolveTransformer(transformer: FirBodyResolveTransfor
             status, containingClass as? FirRegularClass
         )
         return resolveVisibility(
-            statusWithModality, containingClass as? FirRegularClass, isLocal = containingDeclaration != null && containingClass == null
+            statusWithModality, containingClass as? FirRegularClass,
+            isLocal = containingDeclaration != null && containingClass == null,
+            session, scopeSession
         )
     }
 
