@@ -14,11 +14,9 @@ import org.jetbrains.kotlin.fir.resolve.substitution.ConeSubstitutor
 import org.jetbrains.kotlin.fir.scopes.*
 import org.jetbrains.kotlin.fir.symbols.CallableId
 import org.jetbrains.kotlin.fir.symbols.PossiblyFirFakeOverrideSymbol
+import org.jetbrains.kotlin.fir.symbols.StandardClassIds
 import org.jetbrains.kotlin.fir.symbols.impl.*
-import org.jetbrains.kotlin.fir.types.ConeFlexibleType
-import org.jetbrains.kotlin.fir.types.ConeKotlinType
-import org.jetbrains.kotlin.fir.types.ConeTypeCheckerContext
-import org.jetbrains.kotlin.fir.types.coneTypeSafe
+import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.types.AbstractTypeChecker
@@ -381,6 +379,12 @@ class FirTypeIntersectionScope private constructor(
         return member!!
     }
 
+    private fun FirSimpleFunction.fromEnhancement(): Boolean = when (origin) {
+        FirDeclarationOrigin.Enhancement -> true
+        FirDeclarationOrigin.FakeOverride -> symbol.overriddenSymbol?.fir?.fromEnhancement() == true
+        else -> false
+    }
+
     private fun <D : FirCallableSymbol<*>> extractBothWaysOverridable(
         overrider: MemberWithBaseScope<D>,
         members: MutableCollection<MemberWithBaseScope<D>>
@@ -397,9 +401,32 @@ class FirTypeIntersectionScope private constructor(
                 continue
             }
 
-            if (similarFunctionsOrBothProperties(overrideCandidate, next.member.fir as FirCallableMemberDeclaration<*>)) {
+            val nextMember = next.member.fir
+            if (similarFunctionsOrBothProperties(overrideCandidate, nextMember as FirCallableMemberDeclaration<*>)) {
                 result.add(next)
                 iterator.remove()
+            } else if (
+                overrideCandidate is FirSimpleFunction &&
+                nextMember is FirSimpleFunction &&
+                overrideCandidate.valueParameters.size == nextMember.valueParameters.size
+            ) {
+                val (javaFunction, kotlinFunction) = if (nextMember.fromEnhancement() && !overrideCandidate.fromEnhancement()) {
+                    nextMember to overrideCandidate
+                } else if (overrideCandidate.fromEnhancement() && !nextMember.fromEnhancement()) {
+                    overrideCandidate to nextMember
+                } else {
+                    continue
+                }
+                if (kotlinFunction.valueParameters.zip(javaFunction.valueParameters).all { (kotlinParameter, javaParameter) ->
+                        val candidateType = javaParameter.returnTypeRef.coneTypeSafe<ConeKotlinType>()?.lowerBoundIfFlexible()
+                        val baseType = kotlinParameter.returnTypeRef.coneTypeSafe<ConeKotlinType>()
+                        candidateType is ConeClassLikeType && baseType is ConeTypeParameterType &&
+                                candidateType.classId == StandardClassIds.Any
+                    }
+                ) {
+                    result.add(next)
+                    iterator.remove()
+                }
             }
         }
 
