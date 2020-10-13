@@ -18,9 +18,11 @@ import org.jetbrains.kotlin.fir.symbols.CallableId
 import org.jetbrains.kotlin.fir.symbols.StandardClassIds
 import org.jetbrains.kotlin.fir.symbols.SyntheticSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.*
+import org.jetbrains.kotlin.fir.typeContext
 import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.fir.types.ConeNullability.NOT_NULL
 import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.types.AbstractTypeChecker
 
 class SyntheticPropertySymbol(
     callableId: CallableId,
@@ -72,8 +74,19 @@ class FirSyntheticPropertiesScope(
                     val parameter = setter.valueParameters.singleOrNull() ?: return
                     if (setter.typeParameters.isNotEmpty() || setter.isStatic) return
                     val parameterType = (parameter.returnTypeRef as? FirResolvedTypeRef)?.type ?: return
-                    if (getterReturnType.withNullability(NOT_NULL) != parameterType.withNullability(NOT_NULL)) {
-                        return
+                    if (getter.symbol.callableId.classId == setter.symbol.callableId.classId) {
+                        if (getterReturnType.withNullability(NOT_NULL) != parameterType.withNullability(NOT_NULL)) {
+                            return
+                        }
+                    } else {
+                        if (!AbstractTypeChecker.isSubtypeOf(
+                                session.typeContext,
+                                getterReturnType.withNullability(NOT_NULL),
+                                parameterType.withNullability(NOT_NULL)
+                            )
+                        ) {
+                            return
+                        }
                     }
                     matchingSetter = setter
                 })
