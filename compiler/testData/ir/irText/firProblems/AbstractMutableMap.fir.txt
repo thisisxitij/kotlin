@@ -70,16 +70,11 @@ FILE fqName:<root> fileName:/AbstractMutableMap.kt
         public abstract fun containsKey (key: K of kotlin.collections.Map): kotlin.Boolean declared in kotlin.collections.Map
       $this: VALUE_PARAMETER name:<this> type:kotlin.collections.Map<K of kotlin.collections.Map, V of kotlin.collections.Map>
       VALUE_PARAMETER name:key index:0 type:K of <root>.MyMap
-    FUN FAKE_OVERRIDE name:containsValue visibility:public modality:ABSTRACT <> ($this:kotlin.collections.Map<K of kotlin.collections.Map, V of kotlin.collections.Map>, value:V of <root>.MyMap) returnType:kotlin.Boolean [fake_override]
+    FUN FAKE_OVERRIDE name:containsValue visibility:public modality:OPEN <> ($this:kotlin.collections.Map<K of kotlin.collections.Map, V of kotlin.collections.Map>, value:V of <root>.MyMap) returnType:kotlin.Boolean [fake_override]
       overridden:
         public abstract fun containsValue (value: V of kotlin.collections.Map): kotlin.Boolean declared in kotlin.collections.Map
       $this: VALUE_PARAMETER name:<this> type:kotlin.collections.Map<K of kotlin.collections.Map, V of kotlin.collections.Map>
       VALUE_PARAMETER name:value index:0 type:V of <root>.MyMap
-    FUN FAKE_OVERRIDE name:containsValue visibility:public modality:OPEN <> ($this:java.util.AbstractMap<K of java.util.AbstractMap, V of java.util.AbstractMap>, p0:K of <root>.MyMap?) returnType:kotlin.Boolean [fake_override]
-      overridden:
-        public open fun containsValue (p0: K of java.util.AbstractMap?): kotlin.Boolean declared in java.util.AbstractMap
-      $this: VALUE_PARAMETER name:<this> type:java.util.AbstractMap<K of java.util.AbstractMap, V of java.util.AbstractMap>
-      VALUE_PARAMETER name:p0 index:0 type:K of <root>.MyMap?
     FUN FAKE_OVERRIDE name:get visibility:public modality:OPEN <> ($this:kotlin.collections.Map<K of kotlin.collections.Map, V of kotlin.collections.Map>, key:K of <root>.MyMap) returnType:V of <root>.MyMap? [fake_override,operator]
       overridden:
         public abstract fun get (key: K of kotlin.collections.Map): V of kotlin.collections.Map? [operator] declared in kotlin.collections.Map

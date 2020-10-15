@@ -79,7 +79,8 @@ class JavaClassMembersEnhancementScope(
                     val classLikeType =
                         valueParameter.returnTypeRef.coneTypeSafe<ConeKotlinType>()?.lowerBoundIfFlexible().safeAs<ConeClassLikeType>()
                     if (classLikeType?.lookupTag?.classId == StandardClassIds.Any) {
-                        val typeParameter = typeParameters.getOrNull(i) ?: typeParameters.first()
+                        val typeParameterIndex = if (name.asString() == "containsValue") 1 else i
+                        val typeParameter = typeParameters.getOrNull(typeParameterIndex) ?: typeParameters.first()
                         val type = ConeTypeParameterLookupTag(typeParameter.symbol).constructType(
                             emptyArray(), valueParameter.returnTypeRef.isMarkedNullable == true
                         )
