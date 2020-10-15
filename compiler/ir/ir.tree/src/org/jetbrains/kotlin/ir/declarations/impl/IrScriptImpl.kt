@@ -46,9 +46,10 @@ class IrScriptImpl(
 
     override lateinit var baseClass: IrType
     override lateinit var explicitCallParameters: List<IrValueParameter>
-    override lateinit var implicitReceivers: List<IrValueParameter>
-    override lateinit var providedProperties: List<IrPropertySymbol>
+    override lateinit var implicitReceiversParameters: List<IrValueParameter>
+    override lateinit var providedProperties: List<Pair<IrValueParameter, IrPropertySymbol>>
     override var resultProperty: IrPropertySymbol? = null
+    override var earlierScripts: List<IrScriptSymbol>? = null
 
     @ObsoleteDescriptorBasedAPI
     override val descriptor: ScriptDescriptor
