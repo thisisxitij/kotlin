@@ -26,4 +26,6 @@ FILE fqName:<root> fileName:/JavaFieldInReference.kt
           <T>: <root>.SourceValue
           <R>: <root>.Node?
           $receiver: GET_VAR 'sources: kotlin.collections.List<<root>.SourceValue> declared in <root>.use' type=kotlin.collections.List<<root>.SourceValue> origin=null
-          transform: ERROR_CALL 'Unsupported callable reference: Q|SourceValue|::R|/SourceValue.nodes|' type=kotlin.reflect.KProperty1<<root>.SourceValue, kotlin.collections.Set<<root>.Node?>?>
+          transform: PROPERTY_REFERENCE 'public final nodes: kotlin.collections.Set<<root>.Node?>? [val]' field='FIELD IR_EXTERNAL_JAVA_DECLARATION_STUB name:nodes type:kotlin.collections.Set<<root>.Node?>? visibility:public [final]' getter='public final fun <get-nodes> (): kotlin.collections.Set<<root>.Node?>? declared in <root>.SourceValue' setter=null type=kotlin.reflect.KProperty1<<root>.SourceValue, kotlin.collections.Set<<root>.Node?>?> origin=null
+            <1>: <none>
+            <2>: <none>
