@@ -13,7 +13,7 @@ FILE fqName:<root> fileName:/RemoveSetInt.kt
       VALUE_PARAMETER name:element index:0 type:kotlin.Int
       BLOCK_BODY
         RETURN type=kotlin.Nothing from='public final fun remove (element: kotlin.Int): kotlin.Boolean declared in <root>.MySet'
-          CALL 'public open fun remove (p0: E of java.util.HashSet?): kotlin.Boolean declared in java.util.HashSet' type=kotlin.Boolean origin=null
+          CALL 'public open fun remove (p0: E of java.util.HashSet?): kotlin.Boolean declared in java.util.HashSet' superQualifier='CLASS IR_EXTERNAL_JAVA_DECLARATION_STUB CLASS name:HashSet modality:OPEN visibility:public superTypes:[java.util.AbstractSet<E of java.util.HashSet?>; kotlin.collections.MutableSet<E of java.util.HashSet?>; kotlin.Cloneable; java.io.Serializable]' type=kotlin.Boolean origin=null
             $this: GET_VAR '<this>: <root>.MySet declared in <root>.MySet.remove' type=<root>.MySet origin=null
             p0: GET_VAR 'element: kotlin.Int declared in <root>.MySet.remove' type=kotlin.Int origin=null
     FUN FAKE_OVERRIDE name:iterator visibility:public modality:OPEN <> ($this:java.util.HashSet<E of java.util.HashSet>) returnType:kotlin.collections.MutableIterator<kotlin.Int?> [fake_override,operator]
