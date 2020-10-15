@@ -14,8 +14,10 @@ import org.jetbrains.kotlin.fir.java.toConeKotlinTypeProbablyFlexible
 import org.jetbrains.kotlin.fir.resolve.substitution.ConeSubstitutor
 import org.jetbrains.kotlin.fir.resolve.substitution.substitutorByMap
 import org.jetbrains.kotlin.fir.scopes.impl.FirAbstractOverrideChecker
+import org.jetbrains.kotlin.fir.symbols.StandardClassIds
 import org.jetbrains.kotlin.fir.typeContext
 import org.jetbrains.kotlin.fir.types.*
+import org.jetbrains.kotlin.load.java.SpecialGenericSignatures
 
 class JavaOverrideChecker internal constructor(
     private val session: FirSession,
@@ -23,11 +25,22 @@ class JavaOverrideChecker internal constructor(
 ) : FirAbstractOverrideChecker() {
     private val context: ConeTypeContext = session.typeContext
 
-    private fun isEqualTypes(candidateType: ConeKotlinType, baseType: ConeKotlinType, substitutor: ConeSubstitutor): Boolean {
-        if (candidateType is ConeFlexibleType) return isEqualTypes(candidateType.lowerBound, baseType, substitutor)
-        if (baseType is ConeFlexibleType) return isEqualTypes(candidateType, baseType.lowerBound, substitutor)
+    private fun isEqualTypes(
+        candidateType: ConeKotlinType,
+        baseType: ConeKotlinType,
+        substitutor: ConeSubstitutor,
+        mayBeSpecialBuiltIn: Boolean
+    ): Boolean {
+        if (candidateType is ConeFlexibleType) return isEqualTypes(candidateType.lowerBound, baseType, substitutor, mayBeSpecialBuiltIn)
+        if (baseType is ConeFlexibleType) return isEqualTypes(candidateType, baseType.lowerBound, substitutor, mayBeSpecialBuiltIn)
         if (candidateType is ConeClassLikeType && baseType is ConeClassLikeType) {
-            return candidateType.lookupTag.classId.let { it.readOnlyToMutable() ?: it } == baseType.lookupTag.classId.let { it.readOnlyToMutable() ?: it }
+            return candidateType.lookupTag.classId.let { it.readOnlyToMutable() ?: it } ==
+                    baseType.lookupTag.classId.let { it.readOnlyToMutable() ?: it }
+        }
+        if (mayBeSpecialBuiltIn && baseType is ConeTypeParameterType &&
+            candidateType is ConeClassLikeType && candidateType.classId == StandardClassIds.Any
+        ) {
+            return true
         }
         return with(context) {
             areEqualTypeConstructors(
@@ -37,12 +50,17 @@ class JavaOverrideChecker internal constructor(
         }
     }
 
-    private fun isEqualTypes(candidateTypeRef: FirTypeRef, baseTypeRef: FirTypeRef, substitutor: ConeSubstitutor) =
-        isEqualTypes(
-            candidateTypeRef.toConeKotlinTypeProbablyFlexible(session, javaTypeParameterStack),
-            baseTypeRef.toConeKotlinTypeProbablyFlexible(session, javaTypeParameterStack),
-            substitutor
-        )
+    private fun isEqualTypes(
+        candidateTypeRef: FirTypeRef,
+        baseTypeRef: FirTypeRef,
+        substitutor: ConeSubstitutor,
+        mayBeSpecialBuiltIn: Boolean = false
+    ) = isEqualTypes(
+        candidateTypeRef.toConeKotlinTypeProbablyFlexible(session, javaTypeParameterStack),
+        baseTypeRef.toConeKotlinTypeProbablyFlexible(session, javaTypeParameterStack),
+        substitutor,
+        mayBeSpecialBuiltIn
+    )
 
     private fun Collection<FirTypeParameterRef>.buildErasure() = associate {
         val symbol = it.symbol
@@ -97,8 +115,9 @@ class JavaOverrideChecker internal constructor(
         if (overrideCandidate.valueParameters.size != baseParameterTypes.size) return false
         val substitutor = buildTypeParametersSubstitutorIfCompatible(overrideCandidate, baseDeclaration) ?: return false
 
+        val mayBeSpecialBuiltIn = baseDeclaration.name in SpecialGenericSignatures.ERASED_VALUE_PARAMETERS_SHORT_NAMES
         return overrideCandidate.valueParameters.zip(baseParameterTypes).all { (paramFromJava, baseType) ->
-            isEqualTypes(paramFromJava.returnTypeRef, baseType, substitutor)
+            isEqualTypes(paramFromJava.returnTypeRef, baseType, substitutor, mayBeSpecialBuiltIn)
         }
     }
 
