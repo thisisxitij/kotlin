@@ -1,0 +1,11 @@
+FILE: removeSetInt.kt
+    public final class MySet : R|kotlin/collections/HashSet<kotlin/Int>| {
+        public constructor(): R|MySet| {
+            super<R|kotlin/collections/HashSet<kotlin/Int>|>()
+        }
+
+        public final override fun remove(element: R|kotlin/Int|): R|kotlin/Boolean| {
+            ^remove this@R|/MySet|.super<R|kotlin/collections/HashSet<kotlin/Int>|>.R|java/util/HashSet.remove|(R|<local>/element|)
+        }
+
+    }
