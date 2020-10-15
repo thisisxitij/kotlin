@@ -1777,6 +1777,11 @@ public class Fir2IrTextTestGenerated extends AbstractFir2IrTextTest {
             runTest("compiler/testData/ir/irText/firProblems/putIfAbsent.kt");
         }
 
+        @TestMetadata("TreeMapBridge.kt")
+        public void testTreeMapBridge() throws Exception {
+            runTest("compiler/testData/ir/irText/firProblems/TreeMapBridge.kt");
+        }
+
         @TestMetadata("V8ArrayToList.kt")
         public void testV8ArrayToList() throws Exception {
             runTest("compiler/testData/ir/irText/firProblems/V8ArrayToList.kt");

@@ -1776,6 +1776,11 @@ public class IrTextTestCaseGenerated extends AbstractIrTextTestCase {
             runTest("compiler/testData/ir/irText/firProblems/putIfAbsent.kt");
         }
 
+        @TestMetadata("TreeMapBridge.kt")
+        public void testTreeMapBridge() throws Exception {
+            runTest("compiler/testData/ir/irText/firProblems/TreeMapBridge.kt");
+        }
+
         @TestMetadata("V8ArrayToList.kt")
         public void testV8ArrayToList() throws Exception {
             runTest("compiler/testData/ir/irText/firProblems/V8ArrayToList.kt");
