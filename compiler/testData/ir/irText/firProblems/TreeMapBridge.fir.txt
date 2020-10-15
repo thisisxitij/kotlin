@@ -328,10 +328,10 @@ FILE fqName:<root> fileName:/TreeMapBridge.kt
         overridden:
           public abstract fun <get-keys> (): kotlin.collections.MutableSet<K of kotlin.collections.MutableMap> declared in kotlin.collections.MutableMap
         $this: VALUE_PARAMETER name:<this> type:kotlin.collections.MutableMap<K of kotlin.collections.MutableMap, V of kotlin.collections.MutableMap>
-    FUN FAKE_OVERRIDE name:getOrDefault visibility:public modality:OPEN <> ($this:kotlin.collections.MutableMap<K of kotlin.collections.MutableMap, V of kotlin.collections.MutableMap>, p0:kotlin.String?, p1:kotlin.String?) returnType:kotlin.String? [fake_override]
+    FUN FAKE_OVERRIDE name:getOrDefault visibility:public modality:OPEN <> ($this:java.util.Map<K of java.util.Map, V of java.util.Map>, p0:kotlin.String?, p1:kotlin.String?) returnType:kotlin.String? [fake_override]
       overridden:
-        public open fun getOrDefault (p0: K of kotlin.collections.MutableMap?, p1: V of kotlin.collections.MutableMap?): V of kotlin.collections.MutableMap? declared in kotlin.collections.MutableMap
-      $this: VALUE_PARAMETER name:<this> type:kotlin.collections.MutableMap<K of kotlin.collections.MutableMap, V of kotlin.collections.MutableMap>
+        public open fun getOrDefault (p0: K of java.util.Map?, p1: V of java.util.Map?): V of java.util.Map? declared in java.util.Map
+      $this: VALUE_PARAMETER name:<this> type:java.util.Map<K of java.util.Map, V of java.util.Map>
       VALUE_PARAMETER name:p0 index:0 type:kotlin.String?
       VALUE_PARAMETER name:p1 index:1 type:kotlin.String?
   FUN name:box visibility:public modality:FINAL <> () returnType:kotlin.String

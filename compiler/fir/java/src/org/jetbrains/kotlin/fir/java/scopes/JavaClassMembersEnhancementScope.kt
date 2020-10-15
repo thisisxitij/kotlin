@@ -65,10 +65,10 @@ class JavaClassMembersEnhancementScope(
         if (SpecialGenericSignatures.ERASED_VALUE_PARAMETERS_SIGNATURES.none { it.endsWith(jvmDescriptor) }) {
             return this
         }
-        val superTypes = lookupSuperTypes(owner, lookupInterfaces = true, deep = true, useSiteSession = session)
-        for (superType in superTypes) {
-            val javaClassId = JavaToKotlinClassMap.mapKotlinToJava(superType.lookupTag.classId.asSingleFqName().toUnsafe())
-                ?: superType.lookupTag.classId
+        val superClassIds = listOfNotNull(symbol.callableId.classId) +
+                lookupSuperTypes(owner, lookupInterfaces = true, deep = true, useSiteSession = session).map { it.lookupTag.classId }
+        for (superClassId in superClassIds) {
+            val javaClassId = JavaToKotlinClassMap.mapKotlinToJava(superClassId.asSingleFqName().toUnsafe()) ?: superClassId
             val fqJvmDescriptor = "${javaClassId.asString()}.$jvmDescriptor"
             if (fqJvmDescriptor in SpecialGenericSignatures.ERASED_VALUE_PARAMETERS_SIGNATURES) {
                 val specialSignatureInfo = SpecialGenericSignatures.getSpecialSignatureInfo(fqJvmDescriptor)
