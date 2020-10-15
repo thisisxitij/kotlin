@@ -5,7 +5,7 @@ FILE: removeSetInt.kt
         }
 
         public final override fun remove(element: R|kotlin/Int|): R|kotlin/Boolean| {
-            ^remove this@R|/MySet|.super<R|kotlin/collections/HashSet<kotlin/Int>|>.R|java/util/HashSet.remove|(R|<local>/element|)
+            ^remove this@R|/MySet|.super<R|kotlin/collections/HashSet<kotlin/Int>|>.R|FakeOverride<java/util/HashSet.remove: R|kotlin/Boolean|>|(R|<local>/element|)
         }
 
     }
