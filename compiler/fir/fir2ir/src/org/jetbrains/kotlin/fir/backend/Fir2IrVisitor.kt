@@ -423,8 +423,9 @@ class Fir2IrVisitor(
         return visitQualifiedAccessExpression(thisReceiverExpression, data)
     }
 
-    private fun implicitCastOrExpression(original: IrExpression, castType: IrType): IrExpression {
-        if (original.type == castType) return original
+    private fun implicitCastOrExpression(original: IrExpression, castType: IrType, isThis: Boolean = false): IrExpression {
+        // If the original is a "this" and original.type is the same as castType, we still want to keep the cast. See kt-42517
+        if (original.type == castType && !isThis) return original
         return IrTypeOperatorCallImpl(
             original.startOffset,
             original.endOffset,
@@ -485,7 +486,8 @@ class Fir2IrVisitor(
                 }
             }
         }
-        return implicitCastOrExpression(value, castTypeRef.toIrType())
+        return implicitCastOrExpression(value, castTypeRef.toIrType(),
+                                        expressionWithSmartcast.originalExpression is FirThisReceiverExpression)
     }
 
     override fun visitExpressionWithSmartcast(expressionWithSmartcast: FirExpressionWithSmartcast, data: Any?): IrElement {

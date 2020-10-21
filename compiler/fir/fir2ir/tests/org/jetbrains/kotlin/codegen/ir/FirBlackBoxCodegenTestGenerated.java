@@ -30081,6 +30081,11 @@ public class FirBlackBoxCodegenTestGenerated extends AbstractFirBlackBoxCodegenT
         public void testWhenSmartCast() throws Exception {
             runTest("compiler/testData/codegen/box/smartCasts/whenSmartCast.kt");
         }
+
+        @TestMetadata("kt42517.kt")
+        public void testKt42517() throws Exception {
+            runTest("compiler/testData/codegen/box/smartCasts/kt42517.kt");
+        }
     }
 
     @TestMetadata("compiler/testData/codegen/box/specialBuiltins")
