@@ -1751,6 +1751,11 @@ public class IrTextTestCaseGenerated extends AbstractIrTextTestCase {
             runTest("compiler/testData/ir/irText/firProblems/ClashResolutionDescriptor.kt");
         }
 
+        @TestMetadata("coercionToUnitForNestedWhen.kt")
+        public void testCoercionToUnitForNestedWhen() throws Exception {
+            runTest("compiler/testData/ir/irText/firProblems/coercionToUnitForNestedWhen.kt");
+        }
+
         @TestMetadata("ConsumeRestOfQuotedSequence.kt")
         public void testConsumeRestOfQuotedSequence() throws Exception {
             runTest("compiler/testData/ir/irText/firProblems/ConsumeRestOfQuotedSequence.kt");
