@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.fir.FirSymbolOwner
 import org.jetbrains.kotlin.fir.backend.*
 import org.jetbrains.kotlin.fir.declarations.*
 import org.jetbrains.kotlin.fir.resolve.ScopeSession
+import org.jetbrains.kotlin.fir.resolve.calls.hasLowPriorityInResolution
 import org.jetbrains.kotlin.fir.scopes.FirTypeScope
 import org.jetbrains.kotlin.fir.scopes.getDirectOverriddenFunctions
 import org.jetbrains.kotlin.fir.scopes.getDirectOverriddenProperties
@@ -149,6 +150,7 @@ class FakeOverrideGenerator(
         val originalDeclaration = originalSymbol.fir
         if (originalSymbol.callableId.classId == classId && !originalDeclaration.origin.fromSupertypes) return
         if (originalDeclaration.visibility == Visibilities.Private) return
+        if (originalDeclaration.attributes.hasLowPriorityInResolution == true) return
 
         val origin = IrDeclarationOrigin.FAKE_OVERRIDE
         val baseSymbol = originalSymbol.deepestOverriddenSymbol() as S

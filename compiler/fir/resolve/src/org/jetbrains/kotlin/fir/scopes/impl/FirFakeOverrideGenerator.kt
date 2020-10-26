@@ -13,6 +13,7 @@ import org.jetbrains.kotlin.fir.declarations.builder.*
 import org.jetbrains.kotlin.fir.declarations.impl.FirDeclarationStatusImpl
 import org.jetbrains.kotlin.fir.declarations.synthetic.FirSyntheticProperty
 import org.jetbrains.kotlin.fir.declarations.synthetic.buildSyntheticProperty
+import org.jetbrains.kotlin.fir.resolve.calls.hasLowPriorityInResolution
 import org.jetbrains.kotlin.fir.resolve.substitution.ChainedSubstitutor
 import org.jetbrains.kotlin.fir.resolve.substitution.ConeSubstitutor
 import org.jetbrains.kotlin.fir.resolve.substitution.substitutorByMap
@@ -100,6 +101,9 @@ object FirFakeOverrideGenerator {
             status = baseFunction.status.updatedStatus(isExpect, newModality, newVisibility)
             symbol = newSymbol
             resolvePhase = baseFunction.resolvePhase
+            if (baseFunction.attributes.hasLowPriorityInResolution == true) {
+                attributes.hasLowPriorityInResolution = true
+            }
 
             typeParameters += configureAnnotationsTypeParametersAndSignature(
                 session, baseFunction, newParameterTypes,

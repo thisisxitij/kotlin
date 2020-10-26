@@ -260,12 +260,19 @@ internal object CheckVisibility : CheckerStage() {
     }
 }
 
+object LowPriorityResolutionKey : FirDeclarationDataKey()
+
+var FirDeclarationAttributes.hasLowPriorityInResolution: Boolean? by FirDeclarationDataRegistry.attributesAccessor(
+    LowPriorityResolutionKey
+)
+
 internal object CheckLowPriorityInOverloadResolution : CheckerStage() {
     private val LOW_PRIORITY_IN_OVERLOAD_RESOLUTION_CLASS_ID: ClassId =
         ClassId(FqName("kotlin.internal"), Name.identifier("LowPriorityInOverloadResolution"))
 
     override suspend fun check(candidate: Candidate, callInfo: CallInfo, sink: CheckerSink, context: ResolutionContext) {
-        val annotations = when (val fir = candidate.symbol.fir) {
+        val fir = candidate.symbol.fir
+        val annotations = when (fir) {
             is FirSimpleFunction -> fir.annotations
             is FirProperty -> fir.annotations
             else -> return
@@ -276,7 +283,7 @@ internal object CheckLowPriorityInOverloadResolution : CheckerStage() {
             lookupTag.classId == LOW_PRIORITY_IN_OVERLOAD_RESOLUTION_CLASS_ID
         }
 
-        if (hasLowPriorityAnnotation) {
+        if (hasLowPriorityAnnotation || (fir as FirDeclaration).attributes.hasLowPriorityInResolution == true) {
             sink.reportDiagnostic(ResolvedWithLowPriority)
         }
     }

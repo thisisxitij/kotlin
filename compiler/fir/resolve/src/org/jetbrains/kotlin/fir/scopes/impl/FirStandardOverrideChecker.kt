@@ -7,6 +7,7 @@ package org.jetbrains.kotlin.fir.scopes.impl
 
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.*
+import org.jetbrains.kotlin.fir.resolve.calls.hasLowPriorityInResolution
 import org.jetbrains.kotlin.fir.resolve.substitution.ConeSubstitutor
 import org.jetbrains.kotlin.fir.typeContext
 import org.jetbrains.kotlin.fir.types.*
@@ -110,6 +111,9 @@ class FirStandardOverrideChecker(session: FirSession) : FirAbstractOverrideCheck
 
     override fun isOverriddenFunction(overrideCandidate: FirSimpleFunction, baseDeclaration: FirSimpleFunction): Boolean {
         if (overrideCandidate.valueParameters.size != baseDeclaration.valueParameters.size) return false
+        if (overrideCandidate.attributes.hasLowPriorityInResolution == true &&
+            baseDeclaration.attributes.hasLowPriorityInResolution != true
+        ) return false
 
         val substitutor = buildTypeParametersSubstitutorIfCompatible(overrideCandidate, baseDeclaration) ?: return false
 

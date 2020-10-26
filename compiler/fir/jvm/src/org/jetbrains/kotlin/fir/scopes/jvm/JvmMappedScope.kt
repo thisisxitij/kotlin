@@ -7,6 +7,7 @@ package org.jetbrains.kotlin.fir.scopes.jvm
 
 import org.jetbrains.kotlin.builtins.jvm.JvmBuiltInsSignatures
 import org.jetbrains.kotlin.fir.declarations.FirRegularClass
+import org.jetbrains.kotlin.fir.resolve.calls.hasLowPriorityInResolution
 import org.jetbrains.kotlin.fir.resolve.substitution.ConeSubstitutor
 import org.jetbrains.kotlin.fir.scopes.*
 import org.jetbrains.kotlin.fir.symbols.impl.*
@@ -24,6 +25,9 @@ class JvmMappedScope(
         javaMappedClassUseSiteScope.processFunctionsByName(name) { symbol ->
             val jvmSignature = symbol.fir.computeJvmDescriptorReplacingKotlinToJava()
             if (jvmSignature in visibleMethods) {
+                if (name in lowPriorityNames) {
+                    symbol.fir.attributes.hasLowPriorityInResolution = true
+                }
                 processor(symbol)
             }
         }
@@ -105,7 +109,7 @@ class JvmMappedScope(
         }
 
         // Forbidden as already declared in Kotlin (since 1.1)
-        private val forbiddenNames = listOf(Name.identifier("getOrDefault"))
+        private val lowPriorityNames = listOf(Name.identifier("getOrDefault"))
 
         fun prepareSignatures(klass: FirRegularClass): Signatures {
 
@@ -119,7 +123,6 @@ class JvmMappedScope(
             }.forEach {
                 visibleMethodsByName.getOrPut(Name.identifier(it.substringBefore("("))) { mutableSetOf() }.add(it)
             }
-            visibleMethodsByName.keys.removeAll(forbiddenNames)
 
             val hiddenConstructors =
                 (JvmBuiltInsSignatures.HIDDEN_CONSTRUCTOR_SIGNATURES + additionalHiddenConstructors)
