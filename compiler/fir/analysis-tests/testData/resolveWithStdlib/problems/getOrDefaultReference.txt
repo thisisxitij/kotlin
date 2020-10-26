@@ -1,0 +1,3 @@
+FILE: getOrDefaultReference.kt
+    public final val ref: R|kotlin/Any| = Q|kotlin/collections/Map|::R|FakeOverride<kotlin/collections/Map.getOrDefault: R|CapturedType(*)|>|
+        public get(): R|kotlin/Any|
